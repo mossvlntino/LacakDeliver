@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pelacakan Delivery</title>
+
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <!-- Leaflet (Map) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="card" id="app">
+      <header class="app-header">
+        <img src="adw.png" alt="Logo" class="logo-img" />
+        <h1>Pelacakan Delivery</h1>
+        <div class="header-spacer" aria-hidden="true"></div>
+      </header>
+
+      <!-- Search View -->
+      <section id="searchView" class="view" aria-label="Cari ID Pengiriman">
+        <h2 class="title">Masukkan ID Pengiriman</h2>
+        <p class="lead">Contoh: <code>PKG-98431</code> atau <code>SO-10015</code></p>
+        <form id="searchForm" class="row" autocomplete="off"
+            onsubmit="return TrackingUI.handleSubmit(event)">
+        <input id="idInput" class="input" name="shipmentId"
+                 placeholder="Mis. PKG-98431" aria-label="ID Pengiriman" />
+            <button id="btnCari" class="btn" type="submit">Cek Status</button>
+        </form>
+
+        <p class="hint">Tips: Akses cepat via URL: <span class="muted">?id=PKG-98431</span></p>
+      </section>
+
+      <!-- Detail View -->
+      <section id="detailView" class="view" hidden aria-live="polite">
+        <div class="toolbar">
+          <div>
+            <div class="muted">ID Pengiriman</div>
+            <div class="id" id="labelId">—</div>
+          </div>
+          <div class="status-chip" id="statusChip">
+            <!-- Spinner tampil di sini saat loading -->
+            <span id="liveSpinner" hidden></span>
+            <span id="labelStatus">Memuat…</span>
+          </div>
+        </div>
+
+        <div class="content">
+          <div class="panel">
+            <h3>Progres</h3>
+            <div class="steps" id="steps"></div>
+          </div>
+
+          <div class="panel">
+            <h3>Linimasa</h3>
+            <div class="timeline" id="timeline"></div>
+            <div class="muted tz">Zona waktu: Asia/Jakarta</div>
+          </div>
+
+          <!-- Map Panel spanning full width -->
+          <div class="panel map-panel">
+            <h3>Peta Pengiriman</h3>
+            <div id="map" role="region" aria-label="Peta posisi pengiriman"></div>
+            <div class="muted tz" id="mapCaption">Posisi saat ini ditandai penanda biru.</div>
+          </div>
+        </div>
+
+        <div class="actions-bar">
+          <button class="btn ghost" type="button" onclick="TrackingUI.goBack()">Cari ID Lain</button>
+          <button class="btn" type="button" onclick="TrackingUI.refreshData()">Muat Ulang</button>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      © <span id="year"></span>2025 avjk • Adyawinsa Stamping Industries
+    </footer>
+  </div>
+
+  <!-- Not Found / Validation Modal -->
+  <div class="modal-backdrop" id="modalNF" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="nfTitle">
+      <header class="modal-header">
+        <h2 id="nfTitle">ID tidak ditemukan</h2>
+      </header>
+      <div class="body" id="nfBody">
+        Mohon periksa kembali nomor ID pengiriman yang dimasukkan. Jika tetap tidak ada, hubungi admin logistik.
+      </div>
+      <div class="actions">
+        <button class="btn ghost" onclick="TrackingUI.closeNF()">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
